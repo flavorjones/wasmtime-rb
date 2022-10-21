@@ -1,0 +1,36 @@
+---
+name: Cross Gem
+on:
+  workflow_dispatch:
+  push:
+    branches: ["cross-gem/*"]
+
+jobs:
+  cross_gems:
+    name: Cross compile gems
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby-platform:
+          - "aarch64-linux"
+          - "arm64-darwin"
+          - "x64-mingw-ucrt"
+          - "x64-mingw32"
+          - "x86_64-darwin"
+          - "x86_64-linux"
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: oxidize-rb/actions/setup-ruby-and-rust@main
+        with:
+          ruby-version: "3.1"
+          bundler-cache: false
+          cargo-cache: true
+          cargo-vendor: true
+          cache-version: v1
+
+      - uses: oxidize-rb/cross-gem-action@v6
+        with:
+          platform: ${{ matrix.ruby-platform }}
+          version: "0.9.34"
