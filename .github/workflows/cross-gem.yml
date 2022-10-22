@@ -34,4 +34,13 @@ jobs:
           platform: ${{ matrix.ruby-platform }}
           version: "0.9.34"
           env:
-            RUBY_CC_VERSION="2.7.0:3.0.0:3.1.0"
+            RUBY_CC_VERSION="3.1.0:3.0.0:2.7.0"
+
+      - name: Smoke gem install
+        if: matrix.ruby-platform == "x86_64-linux"
+        run:
+          bundle exec rake build
+          gem install pkg/wasmtime-rb-*.gem --verbose
+          script="puts Wasmtime::Engine.new(Wasmtime::Config.new).precompile_module('(module)')"
+          ruby -rwasmtime -e "$script" | grep wasmtime-aot
+          echo "✅ Successfully gem installed"
