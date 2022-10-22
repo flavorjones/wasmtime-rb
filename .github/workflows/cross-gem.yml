@@ -37,7 +37,7 @@ jobs:
             RUBY_CC_VERSION="3.1.0:3.0.0:2.7.0"
 
       - name: Smoke gem install
-        if: matrix.ruby-platform == "x86_64-linux"
+        if: matrix.ruby-platform == 'x86_64-linux' # GitHub actions architecture
         run:
           bundle exec rake build
           gem install pkg/wasmtime-rb-*.gem --verbose
