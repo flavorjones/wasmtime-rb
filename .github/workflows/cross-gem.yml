@@ -38,7 +38,7 @@ jobs:
 
       - name: Smoke gem install
         if: matrix.ruby-platform == 'x86_64-linux' # GitHub actions architecture
-        run:
+        run: |
           bundle exec rake build
           gem install pkg/wasmtime-rb-*.gem --verbose
           script="puts Wasmtime::Engine.new(Wasmtime::Config.new).precompile_module('(module)')"
