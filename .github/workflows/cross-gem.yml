@@ -34,7 +34,7 @@ jobs:
           platform: ${{ matrix.ruby-platform }}
           version: "0.9.34"
           env:
-            RUBY_CC_VERSION="3.1.0:3.0.0:2.7.0"
+            RUBY_CC_VERSION=3.1.0:3.0.0:2.7.0
 
       - name: Smoke gem install
         if: matrix.ruby-platform == 'x86_64-linux' # GitHub actions architecture
