@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+set -eux
+
+ruby -rwasmtime -e "exit Wasmtime::Engine.new(Wasmtime::Config.new).precompile_module('(module)').include?('wasmtime-aot') ? 0 : 1"
+
+echo "✅ Successfully installed gem"
