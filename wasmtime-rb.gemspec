@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
-require_relative "lib/wasmtime/version"
+begin
+  require_relative "lib/wasmtime/version"
+rescue LoadError
+  puts "WARNING: Could not load Wasmtime::VERSION" # this will happen during smoke tests in CI
+end
 
 Gem::Specification.new do |spec|
   spec.name = "wasmtime-rb"
-  spec.version = Wasmtime::VERSION
+  spec.version = defined?(Wasmtime::VERSION) ? Wasmtime::VERSION : "0.0.0"
   spec.authors = ["Ian Ker-Seymer"]
   spec.email = ["hello@ianks.com"]
 
