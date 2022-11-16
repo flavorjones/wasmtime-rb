@@ -1,0 +1,43 @@
+---
+name: Cross Gem
+on:
+  workflow_dispatch:
+  push:
+    branches: ["cross-gem/*"]
+
+jobs:
+  cross_gems:
+    name: Cross compile gems
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby-platform:
+          - "aarch64-linux"
+          - "arm64-darwin"
+          - "x86_64-darwin"
+          - "x86_64-linux"
+          - "x86_64-linux-musl"
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: oxidize-rb/actions/setup-ruby-and-rust@main
+        with:
+          ruby-version: "3.1"
+          bundler-cache: false
+          cargo-cache: true
+          cargo-vendor: true
+          cache-version: v1
+
+      - uses: oxidize-rb/cross-gem-action@v6
+        with:
+          platform: ${{ matrix.ruby-platform }}
+          version: "0.9.34"
+          env:
+            RUBY_CC_VERSION=3.1.0:3.0.0:2.7.0
+
+      - name: Smoke gem install
+        if: matrix.ruby-platform == 'x86_64-linux' # GitHub actions architecture
+        run: |
+          gem install pkg/wasmtime-rb-*.gem --verbose
+          bin/smoke-test

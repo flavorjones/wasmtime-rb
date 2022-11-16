@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -eux
+
+ruby -rwasmtime -e "exit Wasmtime::Engine.new(Wasmtime::Config.new).precompile_module('(module)').include?('wasmtime-aot') ? 0 : 1"
+
+echo "✅ Successfully installed gem"
+
+bundle install
+rm -rf lib ext # ensure we don't use the local files
+bundle exec rake spec
+
+echo "✅ Tests passed"

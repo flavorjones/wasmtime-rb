@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
 require_relative "wasmtime/version"
-require_relative "wasmtime/ext"
+
+begin
+  ruby_version = /(\d+\.\d+)/.match(::RUBY_VERSION)
+  require_relative "wasmtime/#{ruby_version}/ext"
+rescue LoadError
+  require "wasmtime/ext"
+end
 
 module Wasmtime
   class Error < StandardError; end
